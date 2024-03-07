@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "712676721888",
+    "project_id": "complaint-registering-karaikal",
+    "storage_bucket": "complaint-registering-karaikal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712676721888:android:f25a217f93c149a6d33c85",
+        "android_client_info": {
+          "package_name": "com.aa.complaint_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpfrBwSlbRDhQuSqCjvW5CbHlb9AHDov8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
