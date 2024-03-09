@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:complaint_app/components/basePage.dart';
-import 'package:complaint_app/components/registeredComplaints.dart';
 import 'package:complaint_app/pages/complaint.dart';
 import 'package:complaint_app/pages/loginPage.dart';
 import 'package:flutter/material.dart';
