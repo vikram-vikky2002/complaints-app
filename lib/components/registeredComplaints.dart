@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:complaint_app/pages/showComplaint.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -24,7 +25,7 @@ class _RegisteredComplaintsState extends State<RegisteredComplaints> {
     for (String documentId in eventIDs) {
       try {
         DocumentSnapshot documentSnapshot =
-            await firestore.collection('events').doc(documentId).get();
+            await firestore.collection('complaints').doc(documentId).get();
 
         if (documentSnapshot.exists) {
           Map<String, dynamic> data =
@@ -80,7 +81,7 @@ class _RegisteredComplaintsState extends State<RegisteredComplaints> {
                     );
                   } else {
                     var document = snapshot.data!.data();
-                    List eventIDs = document!['eventsRegistered'] ?? [];
+                    List eventIDs = document!['complaints'] ?? [];
                     return Column(
                       children: [
                         Expanded(
@@ -98,11 +99,92 @@ class _RegisteredComplaintsState extends State<RegisteredComplaints> {
                               } else {
                                 if (eventIDs.isNotEmpty) {
                                   return Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(10),
                                     child: ListView.builder(
                                       itemCount: snapshot.data?.length,
                                       itemBuilder: (context, index) {
-                                        return const Text('data');
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4),
+                                          child: InkWell(
+                                            onTap: () {
+                                              var det = snapshot.data![index];
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ComplaintDetails(
+                                                          data: det),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Text(
+                                                          'ID : ${snapshot.data![index]['id']}',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      '${snapshot.data![index]['title']}',
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    color: snapshot.data![index]
+                                                            ['status']
+                                                        ? Colors.green
+                                                        : Colors.grey,
+                                                    child: Row(
+                                                      children: [
+                                                        snapshot.data![index]
+                                                                ['status']
+                                                            ? const Icon(
+                                                                Icons.check)
+                                                            : const Icon(
+                                                                Icons.close),
+                                                        Text(snapshot.data![
+                                                                index]['status']
+                                                            ? "Checked"
+                                                            : "Not Checked"),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   );

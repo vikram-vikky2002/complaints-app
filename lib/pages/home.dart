@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:complaint_app/components/basePage.dart';
 import 'package:complaint_app/pages/complaint.dart';
 import 'package:complaint_app/pages/loginPage.dart';
+import 'package:complaint_app/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? _timeString;
+  User? user;
 
   void _getTime() {
     final DateTime now = DateTime.now();
@@ -29,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(const Duration(seconds: 1), (Timer t) => _getTime());
+    user = FireAuth().currentUser;
     super.initState();
   }
 
@@ -97,11 +101,35 @@ class _HomePageState extends State<HomePage> {
                       // vertical: 50,
                     ),
                     child: InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
+                      onTap: () {
+                        user = FireAuth().currentUser;
+                        // setState(() {});
+                        if (user != null) {
+                          print('user');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
                               builder: (context) =>
-                                  const ComplaintRegisterPage())),
+                                  const ComplaintRegisterPage(),
+                            ),
+                          );
+                        } else {
+                          print('no user');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        }
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const LoginPage(),
+                        //   ),
+                        // );
+                      },
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.14,
                         decoration: BoxDecoration(
@@ -134,37 +162,6 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        // height: MediaQuery.of(context).size.height * 0.14,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.09,
-                                child: Image.asset('assets/icons/status.png'),
-                              ),
-                            ),
-                            const Text(
-                              'Complaint Status',
-                              textAlign: TextAlign.center,
-                              softWrap: true,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Fonarto',
-                                // fontSize: 25,
-                              ),
-                            ),
-                            const SizedBox(height: 10)
-                          ],
-                        ),
-                      ),
                       InkWell(
                         onTap: () => Navigator.push(
                           context,
@@ -205,12 +202,6 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
                       Container(
                         // height: MediaQuery.of(context).size.height * 0.14,
                         width: MediaQuery.of(context).size.width * 0.4,
@@ -242,16 +233,30 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.14,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                      )
                     ],
                   ),
+                  const SizedBox(height: 15),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     Container(
+                  //       height: MediaQuery.of(context).size.height * 0.14,
+                  //       width: MediaQuery.of(context).size.width * 0.4,
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         color: Colors.white.withOpacity(0.5),
+                  //       ),
+                  //     ),
+                  //     Container(
+                  //       height: MediaQuery.of(context).size.height * 0.14,
+                  //       width: MediaQuery.of(context).size.width * 0.4,
+                  //       decoration: BoxDecoration(
+                  //         borderRadius: BorderRadius.circular(10),
+                  //         color: Colors.white.withOpacity(0.5),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
                 ],
               ),
               const SizedBox(height: 100),
