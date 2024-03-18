@@ -4,17 +4,14 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:complaint_app/components/basePage.dart';
 import 'package:complaint_app/components/glassTextFields.dart';
-import 'package:complaint_app/pages/loginPage.dart';
 import 'package:complaint_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class ComplaintRegisterPage extends StatefulWidget {
@@ -26,6 +23,7 @@ class ComplaintRegisterPage extends StatefulWidget {
 
 class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
   TextEditingController title = TextEditingController();
+  TextEditingController location = TextEditingController();
   TextEditingController description = TextEditingController();
   final RoundedLoadingButtonController _btnController =
       RoundedLoadingButtonController();
@@ -46,22 +44,21 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Choose Image Source"),
+          title: const Text("Choose Image Source"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text("Gallery"),
+                leading: const Icon(Icons.photo_library),
+                title: const Text("Gallery"),
                 onTap: () async {
                   Navigator.pop(context);
                   await _getImage(_picker, ImageSource.gallery);
-                  // _pickImage(_picker, ImageSource.gallery);
                 },
               ),
               ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text("Camera"),
+                leading: const Icon(Icons.camera_alt),
+                title: const Text("Camera"),
                 onTap: () async {
                   Navigator.pop(context);
                   await _getImage(_picker, ImageSource.camera);
@@ -89,8 +86,9 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
   reset() {
     setState(() {
       _imageFile = null;
-      title.text = "";
-      description.text = "";
+      title.clear();
+      description.clear();
+      location.clear();
     });
     Timer(const Duration(seconds: 2), () {
       _btnController.reset();
@@ -115,7 +113,7 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
 
       return;
     }
-    if (title.text == "" || description.text == "") {
+    if (title.text == "" || description.text == "" || location.text == "") {
       _btnController.error();
       Timer(const Duration(seconds: 2), () {
         _btnController.reset();
@@ -156,7 +154,9 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
           'description': description.text,
           'date': DateTime.now(),
           'images': imagesUrl,
+          'location': location.text,
           'userID': user?.email ?? "...",
+          'status': false,
         };
         await FirebaseFirestore.instance
             .collection('complaints')
@@ -182,6 +182,47 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
       }).then((value) {
         _btnController.success();
         reset();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              Timer(const Duration(seconds: 2), () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+              return const Scaffold(
+                backgroundColor: Color.fromARGB(255, 43, 189, 10),
+                body: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 100,
+                        width: 100,
+                        child: Icon(
+                          Icons.done_outlined,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      Text(
+                        'Uploaded Sucessfully',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+        //   Timer(const Duration(seconds: 2), () {
+
+        // });
       });
 
       // await FirebaseFirestore.instance.collection('complaints').doc().set(
@@ -263,6 +304,14 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
                 cont: description,
               ),
               const SizedBox(height: 16),
+              GlassTextField(
+                labelText: "Location",
+                validator: ValidationBuilder()
+                    .required("This field is required")
+                    .build(),
+                cont: location,
+              ),
+              const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -292,12 +341,26 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
               ),
               const SizedBox(height: 45),
               if (uploadProgress > 0.0)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: LinearProgressIndicator(
-                    minHeight: 5,
-                    value: uploadProgress,
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Uploading... ${(uploadProgress * 100).toStringAsFixed(1)}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        // fontWeight: FontWeight.bold,
+                        fontFamily: 'Fonarto',
+                        // fontSize: MediaQuery.of(context).size.width * 0.068,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: LinearProgressIndicator(
+                        minHeight: 5,
+                        value: uploadProgress,
+                      ),
+                    ),
+                  ],
                 ),
               const SizedBox(height: 25),
               RoundedLoadingButton(

@@ -29,7 +29,7 @@ class _ComplaintDetailsState extends State<ComplaintDetails> {
     var timeStyle = const TextStyle(
       color: Colors.white,
       // fontFamily: 'Fonarto',
-      fontSize: 13,
+      fontSize: 15,
     );
 
     return BackgroundPage(
@@ -55,6 +55,38 @@ class _ComplaintDetailsState extends State<ComplaintDetails> {
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        '  Location',
+                        textAlign: TextAlign.justify,
+                        style: timeStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Center(
+                      child: Text(
+                        '${widget.data['location'] ?? "..."}',
+                        textAlign: TextAlign.justify,
+                        style: timeStyle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: Text(
                 'Submitted on : ${DateFormat('dd/MM/yyyy hh:mm a').format(widget.data['date'].toDate())}',
                 textAlign: TextAlign.justify,
@@ -65,7 +97,7 @@ class _ComplaintDetailsState extends State<ComplaintDetails> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: widget.data['status'] ? Colors.green : Colors.grey,
+                color: widget.data['status'] ? Colors.greenAccent : Colors.grey,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
