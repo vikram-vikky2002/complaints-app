@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   String? _timeString;
   User? user;
 
-
   void _getTime() {
     final DateTime now = DateTime.now();
     final String formattedDateTime = _formatDateTime(now);
@@ -281,20 +280,6 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 15),
                 ],
               ),
-              const SizedBox(height: 100),
-              const Padding(
-                padding: EdgeInsets.all(13),
-                child: Text(
-                  'Made by AppAlchemy 📱',
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              )
             ],
           ),
         ),
