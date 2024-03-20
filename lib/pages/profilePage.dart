@@ -3,7 +3,6 @@ import 'package:complaint_app/components/registeredComplaints.dart';
 import 'package:complaint_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required userData});

@@ -2,6 +2,7 @@ import 'package:complaint_app/components/basePage.dart';
 import 'package:complaint_app/pages/profilePage.dart';
 import 'package:complaint_app/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -97,17 +98,23 @@ class _LoginPageState extends State<LoginPage> {
                                     .update({
                                   'lastSignin': DateTime.now(),
                                 });
-                                print("Exist..");
+                                if (kDebugMode) {
+                                  print("Exist..");
+                                }
                               } else {
                                 await FirebaseFirestore.instance
                                     .collection('users')
                                     .doc(user.email)
                                     .set({});
-                                print("New doc Created..");
+                                if (kDebugMode) {
+                                  print("New doc Created..");
+                                }
                               }
                             });
                           } on FirebaseException catch (error) {
-                            print("Errro : $error");
+                            if (kDebugMode) {
+                              print("Errro : $error");
+                            }
                           }
 
                           Navigator.pop(context);

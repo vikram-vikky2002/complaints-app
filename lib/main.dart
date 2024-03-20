@@ -30,36 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      // home: const LoginPage(),
       home: const HomePage(),
-      // home: const ProfilePage(),
-      // home: Scaffold(
-      //   backgroundColor: Color.fromARGB(255, 43, 189, 10),
-      //   body: SizedBox(
-      //     width: double.infinity,
-      //     child: Column(
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       children: [
-      //         SizedBox(
-      //           height: 100,
-      //           width: 100,
-      //           child: Icon(
-      //             Icons.done_outlined,
-      //             color: Colors.white,
-      //             size: 40,
-      //           ),
-      //         ),
-      //         Text(
-      //           'Uploaded Sucessfully',
-      //           style: TextStyle(
-      //             fontWeight: FontWeight.bold,
-      //             color: Colors.white,
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

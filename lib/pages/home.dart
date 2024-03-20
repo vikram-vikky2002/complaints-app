@@ -4,8 +4,12 @@ import 'package:complaint_app/components/basePage.dart';
 import 'package:complaint_app/pages/complaint.dart';
 import 'package:complaint_app/pages/loginPage.dart';
 import 'package:complaint_app/services/auth.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   String? _timeString;
   User? user;
 
+
   void _getTime() {
     final DateTime now = DateTime.now();
     final String formattedDateTime = _formatDateTime(now);
@@ -26,6 +31,47 @@ class _HomePageState extends State<HomePage> {
       _timeString = formattedDateTime;
     });
   }
+
+  late StreamSubscription internet;
+  var isDeviceConnected = false, isAlertSet = false;
+
+  showDialogBox() => showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('No Internet Connection'),
+          content: const Text('Check your internet connection'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, 'cancel');
+                setState(() {
+                  isAlertSet = false;
+                });
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected) {
+                  showDialogBox();
+                  setState(() {
+                    isAlertSet = true;
+                  });
+                }
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+
+  getConnectivity() =>
+      internet = Connectivity().onConnectivityChanged.listen((event) async {
+        isDeviceConnected = await InternetConnectionChecker().hasConnection;
+        if (!isDeviceConnected && isAlertSet == false) {
+          showDialogBox();
+          setState(() {
+            isAlertSet = true;
+          });
+        }
+      });
 
   @override
   void initState() {
@@ -105,7 +151,9 @@ class _HomePageState extends State<HomePage> {
                         user = FireAuth().currentUser;
                         // setState(() {});
                         if (user != null) {
-                          print('user');
+                          if (kDebugMode) {
+                            print('user');
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -114,7 +162,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         } else {
-                          print('no user');
+                          if (kDebugMode) {
+                            print('no user');
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -122,13 +172,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         }
-
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const LoginPage(),
-                        //   ),
-                        // );
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.14,
@@ -236,27 +279,6 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   const SizedBox(height: 15),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //   children: [
-                  //     Container(
-                  //       height: MediaQuery.of(context).size.height * 0.14,
-                  //       width: MediaQuery.of(context).size.width * 0.4,
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(10),
-                  //         color: Colors.white.withOpacity(0.5),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //       height: MediaQuery.of(context).size.height * 0.14,
-                  //       width: MediaQuery.of(context).size.width * 0.4,
-                  //       decoration: BoxDecoration(
-                  //         borderRadius: BorderRadius.circular(10),
-                  //         color: Colors.white.withOpacity(0.5),
-                  //       ),
-                  //     )
-                  //   ],
-                  // ),
                 ],
               ),
               const SizedBox(height: 100),

@@ -47,7 +47,7 @@ class GlassTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-              color: Color.fromARGB(255, 255, 255, 255).withOpacity(1),
+              color: const Color.fromARGB(255, 255, 255, 255).withOpacity(1),
               width: 2.0),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -95,15 +95,15 @@ class GlassDescriptionField extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         hintText: hintText,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         helperText: helperText,
-        helperStyle: TextStyle(
+        helperStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
         border: const OutlineInputBorder(),
@@ -114,7 +114,7 @@ class GlassDescriptionField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-              color: Color.fromARGB(255, 255, 255, 255).withOpacity(1),
+              color: const Color.fromARGB(255, 255, 255, 255).withOpacity(1),
               width: 2.0),
           borderRadius: BorderRadius.circular(25),
         ),

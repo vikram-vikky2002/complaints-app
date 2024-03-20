@@ -367,12 +367,6 @@ class _ComplaintRegisterPageState extends State<ComplaintRegisterPage> {
                 onPressed: () {
                   upload();
 
-                  // Timer(const Duration(seconds: 2), () {
-                  //   _btnController.success();
-                  // });
-                  // Timer(const Duration(seconds: 4), () {
-                  //   _btnController.reset();
-                  // });
                 },
                 controller: _btnController,
                 child: const Text('Submit',
